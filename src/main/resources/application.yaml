@@ -1,0 +1,76 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: libros-autor-service
+
+# Configuración común para todos los entornos
+server:
+  port: 8080
+
+---
+# Entorno de desarrollo
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:devdb
+    username: rocio
+    password: rocio123
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-dev.sql
+
+logging:
+  level:
+    root: INFO
+    '[com.ejemplospringboot]': DEBUG
+    '[org.springframework.jdbc.core]': DEBUG
+
+---
+# Entorno de pruebas
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: rocio
+    password: rocio123
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-test.sql
+
+logging:
+  level:
+    root: INFO
+    '[com.ejemplospringboot]': INFO
+
+---
+# Entorno de producción
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/books_authors_prod
+    username: postgres
+    password: ${DB_PASSWORD} # Se obtiene de variables de entorno
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    root: WARN
+    '[com.ejemplospringboot]': INFO
